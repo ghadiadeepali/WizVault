@@ -28,6 +28,7 @@ class Card(models.Model):
     
     def __str__(self):
         return self.title 
+    # will be useful in debugging
     
     # class Meta:
     #     db_table = 'card_details'
