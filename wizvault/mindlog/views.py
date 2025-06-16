@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from mindlog.models import Card
-from mindlog.serializers import CardSerializer
+from mindlog.serializers import CardSerializer, NewCardSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -31,9 +31,31 @@ def home(request):
 #     return JsonResponse(cards_list, safe=False)
 #     # by default, JSON response assumes you are sending dictionary. If not then add safe=False to allow non-dict items. safe=false also enables django to determine the type like list, queryset, etc
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def cardView(request):
     if request.method == "GET":
         cards = Card.objects.all()
         serializer = CardSerializer(cards, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    # if request.method == "POST":
+    #     serializer = NewCardSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         new_card = serializer.save()
+            
+    #         output_format = CardSerializer(new_card)
+    #         # This validates based on field types, required fields, model constraints, etc.
+    #         # once save is called, serializer variable now holds the saved object
+    #         # on doing serializer.data it switches to serialization mode internally
+    #         return Response(output_format.data, status=status.HTTP_201_CREATED)
+        
+    #     print("❌ Validation failed:", serializer.errors)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    if request.method == "POST":
+        serializer = NewCardSerializer(data=request.data)  # Same serializer
+        if serializer.is_valid():
+            serializer.save()  # Everything works smoothly
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
