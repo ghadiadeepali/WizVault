@@ -59,3 +59,30 @@ def cardView(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["PUT"])
+def updateCardView(request, pk):
+    try:
+        card = Card.objects.get(pk=pk)
+    except Card.DoesNotExist:
+        return Response({"error": "Card not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = NewCardSerializer(card, data=request.data)  # Or CardSerializer if you want full fields
+    if serializer.is_valid():
+        updated_card = serializer.save()
+        card_info = CardSerializer(updated_card)
+        return Response(card_info.data, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["DELETE"])
+def deleteCardView(request, pk):
+    try:
+        card = Card.objects.get(pk=pk)
+    except Card.DoesNotExist:
+        return Response({"error": "Card not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+    card.delete()
+    return Response({"message": "Card deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
