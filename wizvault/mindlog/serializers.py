@@ -14,3 +14,8 @@ class NewCardSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'text_body', 'category', 'created_at', 'updated_at']
         # all 6 fields will be shown in output but the below 3 will be ignored in input
         read_only_fields = ['id', 'created_at', 'updated_at']
+        
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
