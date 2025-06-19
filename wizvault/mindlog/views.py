@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from mindlog.models import Card
+from mindlog.models import Card, Category
 from mindlog.serializers import CardSerializer, NewCardSerializer, CategorySerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -70,3 +70,22 @@ def delete_card_view(request, pk):
     
     card.delete()
     return Response({"message": "Card deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(["GET", "POST"])
+def list_category_view(request):
+    if request.method == "GET":
+        try:
+            categories = Category.objects.all()
+            
+            if categories.exists():
+                serializer = CategorySerializer(categories, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({"message": "No categories found."}, status=status.HTTP_204_NO_CONTENT)
+
+        except Exception as e:
+            return Response({"error": f"Something went wrong: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+                
+    
+        
