@@ -11,9 +11,28 @@ class CardSerializer(serializers.ModelSerializer):
 class NewCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
-        fields = ['id', 'title', 'text_body', 'category', 'created_at', 'updated_at']
-        # all 6 fields will be shown in output but the below 3 will be ignored in input
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        fields = ['title', 'text_body', 'category','tags', 'source', 'image', 'is_favourite']
+        extra_kwargs = {
+            'tags': {'required': False},
+            'source': {'required': False},
+            'image': {'required': False},
+            'is_favourite': {'required': False},
+        }
+        
+        
+class UpdateCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Card
+        fields = ['title', 'text_body', 'category','tags', 'source', 'image', 'is_favourite']
+        extra_kwargs = {
+            'title':{'required': False},
+            'text_body':{'required': False},
+            'category':{'required': False},
+            'tags': {'required': False},
+            'source': {'required': False},
+            'image': {'required': False},
+            'is_favourite': {'required': False},
+        }
         
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
