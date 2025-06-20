@@ -36,14 +36,14 @@ class Card(models.Model):
     
 
 class Category(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     # sets created_at only once when the record is created
     updated_at = models.DateTimeField(auto_now=True)
     # updates updated_at every time the record is saved
     
     def __str__(self):
-        return self.name
+        return f"id: {self.id}, name: {self.name}"
     
     
 
